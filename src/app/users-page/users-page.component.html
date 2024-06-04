@@ -1,0 +1,86 @@
+<p>To display users from a specific company, select it from the drop-down list below</p>
+
+<hr>
+
+<div class="table-control">
+  <div>
+    <span>Company </span>
+    <select [formControl]="companyInput">
+      <option
+        *ngFor="let company of companies"
+      >
+        {{company}}
+      </option>
+    </select>
+  </div>
+
+
+  <div>
+    <span>Users per page </span>
+    <select [formControl]="perPageInput">
+      <option *ngFor="let pagination of paginationCases">
+        {{pagination}}
+      </option>
+    </select>
+  </div>
+</div>
+
+<hr>
+
+<table class="users-table">
+  <thead>
+    <tr>
+      <th
+        *ngFor="let column of columnsHeaders"
+        class="users-table-cell"
+        [ngClass]="{ 'clickable': column !== 'avatar' }"
+        (click)="column !== 'avatar' && changeSorting(column)"
+      >
+        {{ column | titlecase }}
+        <span *ngIf="isDescSorting(column)">▼</span>
+        <span *ngIf="isAscSorting(column)">▲</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of usersRendered">
+      <td
+        *ngFor="let column of columnsHeaders"
+        [ngSwitch]="column"
+        class="users-table-cell"
+      >
+        <p *ngSwitchDefault>
+          {{ user[column] }}
+        </p>
+
+        <a
+          *ngSwitchCase="'username'"
+          [routerLink]="['/users', user.id]"
+          [queryParams]="{id: user.id}"
+        >
+          {{ user[column] }}
+        </a>
+
+        <a
+          *ngSwitchCase="'avatar'"
+          [routerLink]="['/users', user.id]"
+          [queryParams]="{id: user.id}"
+        >
+          <img [src]="user[column]" alt="avatar">
+        </a>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="wrapper">
+  <pagination
+    *ngIf="usersProcessed.length"
+    [currentPage]="currentPage"
+    [limit]="currentPagintation"
+    [total]="usersProcessed.length"
+    (changePage)="changePage($event)"
+  ></pagination>
+</div>
+

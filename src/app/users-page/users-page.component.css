@@ -1,0 +1,35 @@
+.users-table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table-cell {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.users-table-cell:first-of-type {
+  width: 80px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.table-control {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pages {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+}

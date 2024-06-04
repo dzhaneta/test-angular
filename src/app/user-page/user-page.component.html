@@ -1,0 +1,61 @@
+
+
+<div *ngIf="error; else success">
+  <span>{{ error }}</span>
+  <a [routerLink]="['/users']">Вернуться к списку пользователей.</a>
+</div>
+
+<ng-template #success>
+  <h2>User Details</h2>
+
+  <table class="user-table">
+    <tr>
+      <td class="user-table-cell" rowspan="0">
+        <img [src]="userDetails.avatar" alt="avatar">
+      </td>
+    </tr>
+
+    <tr *ngFor="let item of userDetails | keyvalue">
+      <ng-container>
+        <ng-template [ngIf]="item.key !== 'avatar'">
+          <td class="user-table-cell">{{ item.key }}</td>
+          <td class="user-table-cell">{{ item.value }}</td>
+        </ng-template>
+      </ng-container>
+
+    </tr>
+  </table>
+
+  <h2>User Tasks</h2>
+
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th
+          *ngFor="let column of userTasks[0] | keyvalue"
+          class="user-table-cell"
+        >
+          {{ column.key | titlecase }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of userTasks | sort: 'completed'">
+        <td
+          *ngFor="let column of userTasks[0] | keyvalue"
+          class="user-table-cell"
+        >
+          <input
+            *ngIf="column.key === 'completed'; else textBlock"
+            type="checkbox"
+            [checked]="task[column.key]"
+            disabled
+          >
+
+          <ng-template #textBlock>{{ task[column.key] }}</ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</ng-template>
