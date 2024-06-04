@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { UsersService } from '../services/users.service';
+
+import { Subscription, catchError, of, switchMap } from 'rxjs';
+
+import { UsersService } from '../../services/users.service';
 import { UserInterface, UserTaskInterface } from 'src/types/user.interface';
-import { Subscription, catchError, forkJoin, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-user-page',

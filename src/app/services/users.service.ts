@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
-import { catchError, map, of, switchMap, throwError } from "rxjs";
-import { UserInterface } from "src/types/user.interface";
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+
+import { catchError, map, of, switchMap, throwError } from "rxjs";
+
 import { AvatarService } from "./avatar.service";
+
+import { UserInterface } from "src/types/user.interface";
 import { SortingInterface } from "src/types/sorting.interface";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UsersService {
   private cachedUsers: UserInterface[] = [];
 

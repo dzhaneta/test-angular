@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserInterface } from 'src/types/user.interface';
 import { SortingInterface } from 'src/types/sorting.interface';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UsersSortService {
 
   constructor() { }

@@ -1,12 +1,16 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { UsersService } from '../services/users.service';
-import { UserInterface } from 'src/types/user.interface';
-import { SortingInterface } from 'src/types/sorting.interface';
 import { FormControl } from '@angular/forms';
+
 import { BehaviorSubject, Subject, debounceTime, distinct, takeUntil } from 'rxjs';
+
+import { UsersService } from '../services/users.service';
 import { UsersFilterService } from '../services/users-filter.service';
 import { UsersSortService } from '../services/users-sort.service';
 import { PaginationService } from '../services/pagination.service';
+
+import { UserInterface } from 'src/types/user.interface';
+import { SortingInterface } from 'src/types/sorting.interface';
+
 
 @Component({
   selector: 'app-users-page',

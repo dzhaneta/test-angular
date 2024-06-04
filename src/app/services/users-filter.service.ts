@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserInterface } from 'src/types/user.interface';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UsersFilterService {
 
   constructor() { }
