@@ -18,11 +18,8 @@ export class PaginationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.updateSubject
       .subscribe(() => {
-      console.log('pagin new total', this.total);
-      console.log('pagin new limit', this.limit);
       const pagesCount = Math.ceil(this.total / this.limit);
       this.pages = this.range(1, pagesCount);
-      console.log('pages', this.pages);
     });
 
     this.updateSubject.next();

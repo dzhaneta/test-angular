@@ -31,7 +31,6 @@ export class UsersService {
                   address: user.address.city + ', ' + user.address.street + ', ' + user.address.suite,
                   company: user.company.name,
                 }));
-                console.log('cached users', this.cachedUsers);
                 return this.cachedUsers;
               }),
             );

@@ -34,26 +34,23 @@ export class UserPageComponent implements OnInit {
           return this.usersService.getUserById(this.id)
             .pipe(
               switchMap((user: UserInterface) => {
-                console.log('user', user);
                 this.userDetails = user;
 
                 if(user) {
                   return this.usersService.getUserTasks(this.id);
                 } else {
-                  return of(null); // Return a dummy observable if user is not found
+                  return of(null);
                 }
               }),
               catchError(error => {
-                console.log('ERROR HERE!', error.message);
                 this.error = error.message;
-                return of(null); // Return a dummy observable in case of error
+                return of(null);
               })
             );
         })
       )
       .subscribe((tasks: UserTaskInterface[] | null) => {
         if(tasks) {
-          console.log('tasks', tasks);
           this.userTasks = tasks;
         }
       });

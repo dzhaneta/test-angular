@@ -105,7 +105,6 @@ export class UsersPageComponent implements OnInit, OnDestroy {
           this.currentPagintation = parseInt(value);
           this.currentPage = 1;
           this.changePage(this.currentPage);
-          console.log('currentPagintation', value);
         };
       })
   }
