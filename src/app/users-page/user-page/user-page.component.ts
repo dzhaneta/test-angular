@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { EMPTY, Subscription, catchError, map, of, switchMap } from 'rxjs';
+import { EMPTY, Subject, Subscription, catchError, map, of, switchMap, takeUntil } from 'rxjs';
 
 import { UsersService } from '../../services/users.service';
 import { UserInterface, UserTaskInterface } from 'src/types/user.interface';
@@ -20,6 +20,8 @@ export class UserPageComponent implements OnInit, OnDestroy {
 
   error = '';
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private route: ActivatedRoute,
     private usersService: UsersService
@@ -28,6 +30,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user$ = this.route.params
       .pipe(
+        takeUntil(this.destroy$),
         map((params: Params) => +params['id']),
         switchMap(id => {
           if (isNaN(id)) {
@@ -59,6 +62,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.user$.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
