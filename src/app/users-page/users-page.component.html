@@ -56,7 +56,6 @@
         <a
           *ngSwitchCase="'username'"
           [routerLink]="['/users', user.id]"
-          [queryParams]="{id: user.id}"
         >
           {{ user[column] }}
         </a>
@@ -64,7 +63,6 @@
         <a
           *ngSwitchCase="'avatar'"
           [routerLink]="['/users', user.id]"
-          [queryParams]="{id: user.id}"
         >
           <img [src]="user[column]" alt="avatar">
         </a>

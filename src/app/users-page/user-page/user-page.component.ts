@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { Subscription, catchError, of, switchMap } from 'rxjs';
+import { EMPTY, Subscription, catchError, map, of, switchMap } from 'rxjs';
 
 import { UsersService } from '../../services/users.service';
 import { UserInterface, UserTaskInterface } from 'src/types/user.interface';
@@ -11,7 +11,7 @@ import { UserInterface, UserTaskInterface } from 'src/types/user.interface';
   templateUrl: './user-page.component.html',
   styleUrls: ['./user-page.component.css']
 })
-export class UserPageComponent implements OnInit {
+export class UserPageComponent implements OnInit, OnDestroy {
 
   id: number = 0;
   userDetails: UserInterface = {} as UserInterface;
@@ -28,25 +28,27 @@ export class UserPageComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.route.params
       .pipe(
-        switchMap((params: Params) => {
-          this.id = +params['id'];
+        map((params: Params) => +params['id']),
+        switchMap(id => {
+          if (isNaN(id)) {
+            throw new Error('Некорректный id пользователя.');
+          } else {
+            this.id = id;
+            return this.usersService.getUserById(this.id);
+          }
+        }),
+        switchMap((user: UserInterface) => {
+          this.userDetails = user;
 
-          return this.usersService.getUserById(this.id)
-            .pipe(
-              switchMap((user: UserInterface) => {
-                this.userDetails = user;
-
-                if(user) {
-                  return this.usersService.getUserTasks(this.id);
-                } else {
-                  return of(null);
-                }
-              }),
-              catchError(error => {
-                this.error = error.message;
-                return of(null);
-              })
-            );
+          if (user) {
+            return this.usersService.getUserTasks(this.id);
+          } else {
+            return EMPTY;
+          }
+        }),
+        catchError(error => {
+          this.error = error.message;
+          return of(null);
         })
       )
       .subscribe((tasks: UserTaskInterface[] | null) => {
