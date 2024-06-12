@@ -11,7 +11,7 @@
   <table class="user-table">
     <tr>
       <td class="user-table-cell" rowspan="0">
-        <img [src]="'https://randomuser.me/api/portraits/med/men/' + userDetails.id + '.jpg'" alt="avatar picture">
+        <img [src]="'https://randomuser.me/api/portraits/med/men/' + userDetails.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture">
       </td>
     </tr>
 

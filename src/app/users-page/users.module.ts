@@ -14,12 +14,14 @@ import { UsersSortService } from "../services/users-sort.service";
 import { PaginationService } from "../services/pagination.service";
 
 import { ArraySortPipe } from "../shared/pipes/sort.pipe";
+import { SafePipe } from "../shared/pipes/safe.pipe";
 
 @NgModule({
   declarations: [
     UsersPageComponent,
     UserPageComponent,
-    ArraySortPipe
+    ArraySortPipe,
+    SafePipe
   ],
   imports: [
     CommonModule,

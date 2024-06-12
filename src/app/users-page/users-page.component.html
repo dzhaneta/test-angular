@@ -64,7 +64,7 @@
           *ngSwitchCase="'avatar'"
           [routerLink]="['/users', user.id]"
         >
-        <img [src]="'https://randomuser.me/api/portraits/med/men/' + user.id + '.jpg'" alt="avatar picture">        </a>
+        <img [src]="'https://randomuser.me/api/portraits/med/men/' + user.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture">        </a>
 
       </td>
     </tr>
