@@ -3,8 +3,9 @@ import { ActivatedRoute, Params } from '@angular/router';
 
 import { EMPTY, Subject, Subscription, catchError, map, of, switchMap, takeUntil } from 'rxjs';
 
-import { UsersService } from '../../services/users.service';
-import { UserInterface, UserTaskInterface } from 'src/types/user.interface';
+import { UsersDataService } from '../../services/users-data.service';
+import { UserInterface } from 'src/types/user.interface';
+import { TaskInterface } from 'src/types/user-task.interface';
 
 @Component({
   selector: 'app-user-page',
@@ -15,7 +16,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
 
   id: number = 0;
   userDetails: UserInterface = {} as UserInterface;
-  userTasks: UserTaskInterface[] = [];
+  userTasks: TaskInterface[] = [];
   user$: Subscription = new Subscription();
 
   error = '';
@@ -24,7 +25,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private usersService: UsersService
+    private usersDataService: UsersDataService
   ) { }
 
   ngOnInit() {
@@ -37,14 +38,14 @@ export class UserPageComponent implements OnInit, OnDestroy {
             throw new Error('Некорректный id пользователя.');
           } else {
             this.id = id;
-            return this.usersService.getUserById(this.id);
+            return this.usersDataService.getUserById(this.id);
           }
         }),
         switchMap((user: UserInterface) => {
           this.userDetails = user;
 
           if (user) {
-            return this.usersService.getUserTasks(this.id);
+            return this.usersDataService.getUserTasks(this.id);
           } else {
             return EMPTY;
           }
@@ -54,7 +55,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
           return of(null);
         })
       )
-      .subscribe((tasks: UserTaskInterface[] | null) => {
+      .subscribe((tasks: TaskInterface[] | null) => {
         if(tasks) {
           this.userTasks = tasks;
         }

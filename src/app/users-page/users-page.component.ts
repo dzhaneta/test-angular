@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 
 import { BehaviorSubject, Subject, debounceTime, distinct, takeUntil } from 'rxjs';
 
-import { UsersService } from '../services/users.service';
+import { UsersDataService } from '../services/users-data.service';
 import { UsersFilterService } from '../services/users-filter.service';
 import { UsersSortService } from '../services/users-sort.service';
 import { PaginationService } from '../services/pagination.service';
@@ -41,7 +41,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private usersService: UsersService,
+    private usersDataService: UsersDataService,
     private usersFilterService: UsersFilterService,
     private usersSortService: UsersSortService,
     private paginationService: PaginationService,
@@ -50,7 +50,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // fetch users & companies lists
-    this.usersService.getUsers()
+    this.usersDataService.getUsers()
       .pipe(takeUntil(this.destroy$))
       .subscribe(users => {
         this.users = users;

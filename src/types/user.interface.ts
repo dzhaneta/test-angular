@@ -3,6 +3,18 @@ export interface UserInterface {
   name: string;
   username: string;
   email: string;
+  address: string;
+  phone: string;
+  website: string;
+  company: string;
+  [key: string]: any;
+}
+
+export interface FetchedUserInterface {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
   address:{
     street: string;
     suite: string;
@@ -15,12 +27,10 @@ export interface UserInterface {
   };
   phone: string;
   website: string;
-  company: string;
+  company: {
+    bs: string;
+    catchhrase: string;
+    name: string;
+  };
   [key: string]: any;
-}
-
-export interface UserTaskInterface {
-  id: number;
-  title: string;
-  completed: boolean;
 }
