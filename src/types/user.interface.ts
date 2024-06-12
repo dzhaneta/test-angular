@@ -16,7 +16,6 @@ export interface UserInterface {
   phone: string;
   website: string;
   company: string;
-  avatar: string;
   [key: string]: any;
 }
 

@@ -50,7 +50,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // fetch users & companies lists
-    this.usersService.getUsers(this.sorting)
+    this.usersService.getUsers()
       .pipe(takeUntil(this.destroy$))
       .subscribe(users => {
         this.users = users;
