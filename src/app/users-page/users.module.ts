@@ -9,8 +9,6 @@ import { UsersPageComponent } from "./users-page.component";
 import { UserPageComponent } from "./user-page/user-page.component";
 
 import { UsersDataService } from "../services/users-data.service";
-import { UsersFilterService } from "../services/users-filter.service";
-import { UsersSortService } from "../services/users-sort.service";
 
 import { ArraySortPipe } from "../shared/pipes/sort.pipe";
 import { SafePipe } from "../shared/pipes/safe.pipe";
@@ -36,8 +34,6 @@ import { PaginationPipe } from "../shared/pipes/pagination.pipe";
   providers: [
     UsersApiService,
     UsersDataService,
-    UsersFilterService,
-    UsersSortService,
   ],
 })
 export class UsersModule {}
