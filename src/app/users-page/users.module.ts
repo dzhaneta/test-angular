@@ -11,17 +11,20 @@ import { UserPageComponent } from "./user-page/user-page.component";
 import { UsersDataService } from "../services/users-data.service";
 import { UsersFilterService } from "../services/users-filter.service";
 import { UsersSortService } from "../services/users-sort.service";
-import { PaginationService } from "../services/pagination.service";
 
 import { ArraySortPipe } from "../shared/pipes/sort.pipe";
 import { SafePipe } from "../shared/pipes/safe.pipe";
 import { UsersApiService } from "../services/users-api.service";
+import { FilterPipe } from "../shared/pipes/filter.pipe";
+import { PaginationPipe } from "../shared/pipes/pagination.pipe";
 
 @NgModule({
   declarations: [
     UsersPageComponent,
     UserPageComponent,
     ArraySortPipe,
+    FilterPipe,
+    PaginationPipe,
     SafePipe
   ],
   imports: [
@@ -35,7 +38,6 @@ import { UsersApiService } from "../services/users-api.service";
     UsersDataService,
     UsersFilterService,
     UsersSortService,
-    PaginationService
   ],
 })
 export class UsersModule {}

@@ -4,9 +4,6 @@ import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Subject, debounceTime, distinct, takeUntil } from 'rxjs';
 
 import { UsersDataService } from '../services/users-data.service';
-import { UsersFilterService } from '../services/users-filter.service';
-import { UsersSortService } from '../services/users-sort.service';
-import { PaginationService } from '../services/pagination.service';
 
 import { UserInterface } from 'src/types/user.interface';
 import { SortingInterface } from 'src/types/sorting.interface';
@@ -16,13 +13,10 @@ import { SortingInterface } from 'src/types/sorting.interface';
   selector: 'app-users-page',
   templateUrl: './users-page.component.html',
   styleUrls: ['./users-page.component.css'],
-  providers: [PaginationService]
 })
 export class UsersPageComponent implements OnInit, OnDestroy {
 
   users: UserInterface[] = [];
-  usersProcessed: UserInterface[] = [];
-  usersRendered: UserInterface[] = [];
   columnsHeaders: string[] = ['avatar', 'name', 'username', 'email', 'address'];
 
   companies: string[] = ['Not selected'];
@@ -42,9 +36,6 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private usersDataService: UsersDataService,
-    private usersFilterService: UsersFilterService,
-    private usersSortService: UsersSortService,
-    private paginationService: PaginationService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -54,7 +45,6 @@ export class UsersPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(users => {
         this.users = users;
-        this.usersProcessed = this.usersSortService.sortUsers(this.users, this.sorting);
         this.changePage(this.currentPage);
 
         const newCompaniesList: string[] = Array.from(new Set(users.map((user: UserInterface) => user.company)));
@@ -71,11 +61,8 @@ export class UsersPageComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         if (value !== null) {
           this.companySelected = value;
-          // filter
-          this.usersProcessed = this.usersFilterService.filterByCompany(this.users, this.companySelected);
-          this.cdr.detectChanges();
-          // reset page to 1 & render
           this.changePage(1);
+          this.cdr.detectChanges();
         };
 
     })
@@ -85,10 +72,6 @@ export class UsersPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(newSorting => {
         this.sorting = newSorting;
-
-        this.usersProcessed = this.usersSortService.sortUsers(this.usersProcessed, this.sorting);
-        this.usersRendered = this.usersProcessed;
-
         this.changePage(1);
         this.cdr.detectChanges();
       });
@@ -135,8 +118,5 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
   changePage(page: number): void {
     this.currentPage = page;
-
-    this.usersRendered = this.paginationService
-      .paginateData(this.usersProcessed, this.currentPage, this.currentPagintation);
   }
 }

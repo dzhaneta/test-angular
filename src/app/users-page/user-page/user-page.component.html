@@ -40,7 +40,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let task of userTasks | sort: 'completed'">
+      <tr *ngFor="let task of userTasks | sort: 'completed' : 'desc'">
         <td
           *ngFor="let column of userTasks[0] | keyvalue"
           class="user-table-cell"

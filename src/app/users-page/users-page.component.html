@@ -43,16 +43,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of usersRendered">
+    <tr *ngFor="let user of users | filter: 'company': companySelected | sort: sorting.column : sorting.order | pagination: currentPage : currentPagintation">
       <td
         *ngFor="let column of columnsHeaders"
         [ngSwitch]="column"
         class="users-table-cell"
       >
-        <p *ngSwitchDefault>
-          {{ user[column] }}
-        </p>
-
         <a
           *ngSwitchCase="'username'"
           [routerLink]="['/users', user.id]"
@@ -64,7 +60,12 @@
           *ngSwitchCase="'avatar'"
           [routerLink]="['/users', user.id]"
         >
-        <img [src]="'https://randomuser.me/api/portraits/med/men/' + user.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture">        </a>
+          <img [src]="'https://randomuser.me/api/portraits/med/men/' + user.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture">
+        </a>
+
+        <p *ngSwitchDefault>
+          {{ user[column] }}
+        </p>
 
       </td>
     </tr>
@@ -73,10 +74,10 @@
 
 <div class="wrapper">
   <pagination
-    *ngIf="usersProcessed.length"
+    *ngIf="users"
     [currentPage]="currentPage"
     [limit]="currentPagintation"
-    [total]="usersProcessed.length"
+    [total]="(users | filter: 'company': companySelected).length"
     (changePage)="changePage($event)"
   ></pagination>
 </div>
