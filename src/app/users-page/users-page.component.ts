@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { BehaviorSubject, Subject, debounceTime, distinct, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, startWith, takeUntil } from 'rxjs';
 
 import { UsersDataService } from '../services/users-data.service';
 
@@ -51,45 +51,26 @@ export class UsersPageComponent implements OnInit, OnDestroy {
         this.companies = ['Not selected', ...newCompaniesList];
       });
 
-    // company filter subscription
-    this.companyInput.valueChanges
-      .pipe(
-        distinct(),
-        debounceTime(1000),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((value) => {
-        if (value !== null) {
-          this.companySelected = value;
-          this.changePage(1);
-          this.cdr.detectChanges();
-        };
-
-    })
-
-    // sorting subscription
-    this.sorting$
+    combineLatest([
+      this.companyInput.valueChanges.pipe(startWith('Not selected')),
+      this.sorting$.pipe(startWith(this.sorting)),
+      this.perPageInput.valueChanges.pipe(startWith(this.currentPagintation))
+    ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(newSorting => {
-        this.sorting = newSorting;
+      .subscribe(([companyValue, sortingValue, perPageValue]) => {
+        if (companyValue !== null) {
+          this.companySelected = companyValue;
+        }
+
+        this.sorting = sortingValue;
+
+        if (perPageValue !== null) {
+          this.currentPagintation = parseInt(String(perPageValue));
+        }
+
         this.changePage(1);
         this.cdr.detectChanges();
       });
-
-    // pagination change subscription
-    this.perPageInput.valueChanges
-      .pipe(
-        distinct(),
-        debounceTime(1000),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((value) => {
-        if (value !== null) {
-          this.currentPagintation = parseInt(value);
-          this.currentPage = 1;
-          this.changePage(this.currentPage);
-        };
-      })
   }
 
   ngOnDestroy(): void {
