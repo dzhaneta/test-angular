@@ -5,8 +5,8 @@ import { BehaviorSubject, Subject, combineLatest, startWith, takeUntil } from 'r
 
 import { UsersDataService } from '../services/users-data.service';
 
-import { UserInterface } from 'src/types/user.interface';
-import { SortingInterface } from 'src/types/sorting.interface';
+import { UserInterface } from '../../types/user.interface';
+import { SortingInterface } from '../../types/sorting.interface';
 
 
 @Component({
@@ -24,8 +24,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   companySelected: string = this.companies[0];
 
   sorting: SortingInterface = { column: 'name', order: 'asc' };
-  private sortingSubject = new BehaviorSubject<SortingInterface>(this.sorting);
-  sorting$ = this.sortingSubject.asObservable();
+  private sorting$ = new BehaviorSubject<SortingInterface>(this.sorting);
 
   perPageInput = new FormControl('');
   paginationCases: number[] = [3, 5, 10];
@@ -58,17 +57,25 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([companyValue, sortingValue, perPageValue]) => {
+        console.log('combineLatest start', companyValue, sortingValue, perPageValue);
+
         if (companyValue !== null) {
           this.companySelected = companyValue;
         }
 
+        console.log('sortingValue', sortingValue);
         this.sorting = sortingValue;
 
+        console.log('sorting changed', this.sorting);
+
         if (perPageValue !== null) {
+          this.changePage(1);
+
           this.currentPagintation = parseInt(String(perPageValue));
+          console.log('combineLtst perPage & currPgntn', perPageValue, this.currentPagintation);
+
         }
 
-        this.changePage(1);
         this.cdr.detectChanges();
       });
   }
@@ -88,13 +95,12 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   }
 
   changeSorting(column: string): void {
-    const futureSortingOrder = this.isDescSorting(column) ? 'asc' : 'desc';
-    this.sorting = {
+    const newSorting: SortingInterface = {
       column,
-      order: futureSortingOrder,
+      order: this.isDescSorting(column) ? 'asc' : 'desc',
     };
 
-    this.sortingSubject.next(this.sorting);
+    this.sorting$.next(newSorting);
   }
 
   changePage(page: number): void {

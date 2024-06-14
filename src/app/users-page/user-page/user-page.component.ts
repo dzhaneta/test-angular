@@ -4,8 +4,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { EMPTY, Subject, Subscription, catchError, map, of, switchMap, takeUntil } from 'rxjs';
 
 import { UsersDataService } from '../../services/users-data.service';
-import { UserInterface } from 'src/types/user.interface';
-import { TaskInterface } from 'src/types/user-task.interface';
+import { UserInterface } from '../../../types/user.interface';
+import { TaskInterface } from '../../../types/user-task.interface';
 
 @Component({
   selector: 'app-user-page',

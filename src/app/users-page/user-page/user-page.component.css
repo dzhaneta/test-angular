@@ -14,3 +14,7 @@
   width: 80px;
 }
 
+.tasks-table-cell:nth-of-type(2) {
+  width: 30px;
+}
+

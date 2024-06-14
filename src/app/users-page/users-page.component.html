@@ -33,17 +33,20 @@
       <th
         *ngFor="let column of columnsHeaders"
         class="users-table-cell"
-        [ngClass]="{ 'clickable': column !== 'avatar' }"
+        [class.clickable]="column !== 'avatar'"
         (click)="column !== 'avatar' && changeSorting(column)"
       >
         {{ column | titlecase }}
-        <span *ngIf="isDescSorting(column)">▼</span>
-        <span *ngIf="isAscSorting(column)">▲</span>
+        <span *ngIf="column === sorting.column">{{ isDescSorting(column) ? '&#9660;' : '&#9650;' }}</span>
       </th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of users | filter: 'company': companySelected | sort: sorting.column : sorting.order | pagination: currentPage : currentPagintation">
+    <tr *ngFor="let user of users
+      | filter: 'company': companySelected
+      | sort: sorting.column : sorting.order
+      | pagination: currentPage : currentPagintation;"
+    >
       <td
         *ngFor="let column of columnsHeaders"
         [ngSwitch]="column"
@@ -74,7 +77,7 @@
 
 <div class="wrapper">
   <pagination
-    *ngIf="users"
+    *ngIf="users.length"
     [currentPage]="currentPage"
     [limit]="currentPagintation"
     [total]="(users | filter: 'company': companySelected).length"

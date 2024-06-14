@@ -8,32 +8,29 @@
 <ng-template #success>
   <h2>User Details</h2>
 
-  <table class="user-table">
+  <table class="user-table details-table">
     <tr>
-      <td class="user-table-cell" rowspan="0">
+      <td class="user-table-cell details-table-cell" rowspan="0">
         <img [src]="'https://randomuser.me/api/portraits/med/men/' + userDetails.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture">
       </td>
     </tr>
 
     <tr *ngFor="let item of userDetails | keyvalue">
-      <ng-container>
-        <ng-template [ngIf]="item.key !== 'avatar'">
-          <td class="user-table-cell">{{ item.key }}</td>
-          <td class="user-table-cell">{{ item.value }}</td>
-        </ng-template>
-      </ng-container>
-
+      <ng-template [ngIf]="item.key !== 'avatar'">
+        <td class="user-table-cell details-table-cell">{{ item.key }}</td>
+        <td class="user-table-cell details-table-cell">{{ item.value }}</td>
+      </ng-template>
     </tr>
   </table>
 
   <h2>User Tasks</h2>
 
-  <table class="user-table">
+  <table class="user-table tasks-table">
     <thead>
       <tr>
         <th
           *ngFor="let column of userTasks[0] | keyvalue"
-          class="user-table-cell"
+          class="user-table-cell tasks-table-cell"
         >
           {{ column.key | titlecase }}
         </th>
@@ -43,7 +40,7 @@
       <tr *ngFor="let task of userTasks | sort: 'completed' : 'desc'">
         <td
           *ngFor="let column of userTasks[0] | keyvalue"
-          class="user-table-cell"
+          class="user-table-cell tasks-table-cell"
         >
           <input
             *ngIf="column.key === 'completed'; else textBlock"
