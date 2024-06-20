@@ -7,7 +7,7 @@ import type {Config} from 'jest';
 
 const config: Config = {
   preset: 'jest-preset-angular',
-  setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/setup-jest.ts'],
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
