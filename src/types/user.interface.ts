@@ -29,7 +29,7 @@ export interface FetchedUserInterface {
   website: string;
   company: {
     bs: string;
-    catchhrase: string;
+    catchPhrase: string;
     name: string;
   };
   [key: string]: any;

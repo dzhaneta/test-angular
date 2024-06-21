@@ -3,13 +3,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, catchError, throwError } from "rxjs";
 
-import { FetchedUserInterface } from "../../types/user.interface";
-import { FetchedTaskInterface } from "../../types/user-task.interface";
+import { FetchedUserInterface } from "../../../types/user.interface";
+import { FetchedTaskInterface } from "../../../types/user-task.interface";
 
 @Injectable()
 export class UsersApiService {
 
-  private readonly apiUrl = 'https://jsonplaceholder.typicode.com';
+  readonly apiUrl = 'https://jsonplaceholder.typicode.com';
 
   constructor(private http: HttpClient) {}
 

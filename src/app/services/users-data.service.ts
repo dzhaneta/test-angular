@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { Observable, map } from "rxjs";
 
-import { UsersApiService } from "./users-api.service";
+import { UsersApiService } from "./users-api/users-api.service";
 
 import { FetchedUserInterface, UserInterface } from "../../types/user.interface";
 import { FetchedTaskInterface, TaskInterface } from "../../types/user-task.interface";

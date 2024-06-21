@@ -12,7 +12,7 @@ import { UsersDataService } from "../services/users-data.service";
 
 import { ArraySortPipe } from "../shared/pipes/sort.pipe";
 import { SafePipe } from "../shared/pipes/safe.pipe";
-import { UsersApiService } from "../services/users-api.service";
+import { UsersApiService } from "../services/users-api/users-api.service";
 import { FilterPipe } from "../shared/pipes/filter/filter.pipe";
 import { PaginationPipe } from "../shared/pipes/pagination.pipe";
 
