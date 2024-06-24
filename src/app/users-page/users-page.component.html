@@ -45,7 +45,8 @@
     <tr *ngFor="let user of users
       | filter: 'company': companySelected
       | sort: sorting.column : sorting.order
-      | pagination: currentPage : currentPagintation;"
+      | pagination: currentPage : currentPagination;
+      trackBy: trackById"
     >
       <td
         *ngFor="let column of columnsHeaders"
@@ -63,7 +64,7 @@
           *ngSwitchCase="'avatar'"
           [routerLink]="['/users', user.id]"
         >
-          <img [src]="'https://randomuser.me/api/portraits/med/men/' + user.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture">
+          <img [src]="'https://randomuser.me/api/portraits/med/men/' + user.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture" title="user avatar">
         </a>
 
         <p *ngSwitchDefault>
@@ -79,7 +80,7 @@
   <pagination
     *ngIf="users.length"
     [currentPage]="currentPage"
-    [limit]="currentPagintation"
+    [limit]="currentPagination"
     [total]="(users | filter: 'company': companySelected).length"
     (changePage)="changePage($event)"
   ></pagination>

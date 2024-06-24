@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { BehaviorSubject, Subject, combineLatest, startWith, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { UsersDataService } from '../services/users-data.service';
 
@@ -24,12 +24,11 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   companySelected: string = this.companies[0];
 
   sorting: SortingInterface = { column: 'name', order: 'asc' };
-  private sorting$ = new BehaviorSubject<SortingInterface>(this.sorting);
 
   perPageInput = new FormControl('');
   paginationCases: number[] = [3, 5, 10];
+  currentPagination = this.paginationCases[0];
   currentPage = 1;
-  currentPagintation = this.paginationCases[0];
 
   private destroy$ = new Subject<void>();
 
@@ -48,36 +47,29 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
         const newCompaniesList: string[] = Array.from(new Set(users.map((user: UserInterface) => user.company)));
         this.companies = ['Not selected', ...newCompaniesList];
+        this.companyInput.setValue(this.companies[0]);
       });
 
-    combineLatest([
-      this.companyInput.valueChanges.pipe(startWith('Not selected')),
-      this.sorting$.pipe(startWith(this.sorting)),
-      this.perPageInput.valueChanges.pipe(startWith(this.currentPagintation))
-    ])
+    this.companyInput.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([companyValue, sortingValue, perPageValue]) => {
-        console.log('combineLatest start', companyValue, sortingValue, perPageValue);
-
+      .subscribe(companyValue => {
         if (companyValue !== null) {
           this.companySelected = companyValue;
         }
-
-        console.log('sortingValue', sortingValue);
-        this.sorting = sortingValue;
-
-        console.log('sorting changed', this.sorting);
-
-        if (perPageValue !== null) {
-          this.changePage(1);
-
-          this.currentPagintation = parseInt(String(perPageValue));
-          console.log('combineLtst perPage & currPgntn', perPageValue, this.currentPagintation);
-
-        }
-
+        this.changePage(1);
         this.cdr.detectChanges();
       });
+
+    this.perPageInput.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(perPageValue => {
+        if (perPageValue !== null && !Number.isNaN(perPageValue)) {
+          this.currentPagination = Number(perPageValue);
+        }
+        this.changePage(1);
+        this.cdr.detectChanges();
+      });
+
   }
 
   ngOnDestroy(): void {
@@ -90,20 +82,21 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     return this.sorting.column === column && this.sorting.order === 'desc';
   }
 
-  isAscSorting(column: string): boolean {
-    return this.sorting.column === column && this.sorting.order === 'asc';
-  }
-
   changeSorting(column: string): void {
     const newSorting: SortingInterface = {
       column,
       order: this.isDescSorting(column) ? 'asc' : 'desc',
     };
 
-    this.sorting$.next(newSorting);
+    this.sorting = newSorting;
+    this.changePage(1);
   }
 
   changePage(page: number): void {
     this.currentPage = page;
+  }
+
+  trackById(index: number, user: UserInterface): number {
+    return user.id;
   }
 }
