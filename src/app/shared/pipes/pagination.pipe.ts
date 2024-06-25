@@ -5,7 +5,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class PaginationPipe  implements PipeTransform {
   transform(data: Array<any>, currentPage: number, itemsPerPage: number): any[] {
-    console.log('pag pipe start', data);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);

@@ -5,7 +5,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class FilterPipe  implements PipeTransform {
   transform(array: Array<Object>, filterKey: string, filterValue: string): any[] {
-    console.log('filter pipe start', array, filterKey, filterValue);
     if (filterValue === 'Not selected') {
       return array;
     } else {

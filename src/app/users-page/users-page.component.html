@@ -5,22 +5,16 @@
 <div class="table-control">
   <div>
     <span>Company </span>
-    <select [formControl]="companyInput">
-      <option
-        *ngFor="let company of companies"
-      >
-        {{company}}
-      </option>
+    <select [formControl]="companyInput" class="company-select">
+      <option *ngFor="let company of companies">{{company}}</option>
     </select>
   </div>
 
 
   <div>
     <span>Users per page </span>
-    <select [formControl]="perPageInput">
-      <option *ngFor="let pagination of paginationCases">
-        {{pagination}}
-      </option>
+    <select [formControl]="perPageInput" class="per-page-select">
+      <option *ngFor="let pagination of paginationCases">{{pagination}}</option>
     </select>
   </div>
 </div>
@@ -36,7 +30,7 @@
         [class.clickable]="column !== 'avatar'"
         (click)="column !== 'avatar' && changeSorting(column)"
       >
-        {{ column | titlecase }}
+        {{column | titlecase}}
         <span *ngIf="column === sorting.column">{{ isDescSorting(column) ? '&#9660;' : '&#9650;' }}</span>
       </th>
     </tr>
@@ -67,9 +61,9 @@
           <img [src]="'https://randomuser.me/api/portraits/med/men/' + user.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture" title="user avatar">
         </a>
 
-        <p *ngSwitchDefault>
+        <span *ngSwitchDefault>
           {{ user[column] }}
-        </p>
+        </span>
 
       </td>
     </tr>
