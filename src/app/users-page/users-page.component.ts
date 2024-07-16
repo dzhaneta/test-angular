@@ -34,7 +34,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private usersDataService: UsersDataService,
-    private cdr: ChangeDetectorRef
+    public cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {

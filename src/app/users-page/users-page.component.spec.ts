@@ -121,6 +121,7 @@ describe('UsersPageComponent', () => {
 
       jest.spyOn(component.companyInput.valueChanges, 'pipe').mockReturnValue(of(mockCompany));
       jest.spyOn(component, 'changePage');
+      jest.spyOn(component.cdr, 'detectChanges');
 
       component.companyInput.setValue(mockCompany);
 
