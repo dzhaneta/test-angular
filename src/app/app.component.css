@@ -1,0 +1,21 @@
+.nav-container {
+  padding: 0;
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  background-color: #dbdbdb;
+}
+
+.nav-item {
+  padding: 10px;
+  text-decoration: none;
+}
+
+.active {
+  background-color: #bababa;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #000;
+}

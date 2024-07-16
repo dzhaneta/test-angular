@@ -5,22 +5,16 @@
 <div class="table-control">
   <div>
     <span>Company </span>
-    <select [formControl]="companyInput">
-      <option
-        *ngFor="let company of companies"
-      >
-        {{company}}
-      </option>
+    <select [formControl]="companyInput" class="company-select">
+      <option *ngFor="let company of companies">{{company}}</option>
     </select>
   </div>
 
 
   <div>
     <span>Users per page </span>
-    <select [formControl]="perPageInput">
-      <option *ngFor="let pagination of paginationCases">
-        {{pagination}}
-      </option>
+    <select [formControl]="perPageInput" class="per-page-select">
+      <option *ngFor="let pagination of paginationCases">{{pagination}}</option>
     </select>
   </div>
 </div>
@@ -33,30 +27,29 @@
       <th
         *ngFor="let column of columnsHeaders"
         class="users-table-cell"
-        [ngClass]="{ 'clickable': column !== 'avatar' }"
+        [class.clickable]="column !== 'avatar'"
         (click)="column !== 'avatar' && changeSorting(column)"
       >
-        {{ column | titlecase }}
-        <span *ngIf="isDescSorting(column)">▼</span>
-        <span *ngIf="isAscSorting(column)">▲</span>
+        {{column | titlecase}}
+        <span *ngIf="column === sorting.column">{{ isDescSorting(column) ? '&#9660;' : '&#9650;' }}</span>
       </th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of usersRendered">
+    <tr *ngFor="let user of users
+      | filter: 'company': companySelected
+      | sort: sorting.column : sorting.order
+      | pagination: currentPage : currentPagination;
+      trackBy: trackById"
+    >
       <td
         *ngFor="let column of columnsHeaders"
         [ngSwitch]="column"
         class="users-table-cell"
       >
-        <p *ngSwitchDefault>
-          {{ user[column] }}
-        </p>
-
         <a
           *ngSwitchCase="'username'"
           [routerLink]="['/users', user.id]"
-          [queryParams]="{id: user.id}"
         >
           {{ user[column] }}
         </a>
@@ -64,10 +57,13 @@
         <a
           *ngSwitchCase="'avatar'"
           [routerLink]="['/users', user.id]"
-          [queryParams]="{id: user.id}"
         >
-          <img [src]="user[column]" alt="avatar">
+          <img [src]="'https://randomuser.me/api/portraits/med/men/' + user.id + '.jpg' | safe: 'resourceUrl'" alt="avatar picture" title="user avatar">
         </a>
+
+        <span *ngSwitchDefault>
+          {{ user[column] }}
+        </span>
 
       </td>
     </tr>
@@ -76,10 +72,10 @@
 
 <div class="wrapper">
   <pagination
-    *ngIf="usersProcessed.length"
+    *ngIf="users.length"
     [currentPage]="currentPage"
-    [limit]="currentPagintation"
-    [total]="usersProcessed.length"
+    [limit]="currentPagination"
+    [total]="(users | filter: 'company': companySelected).length"
     (changePage)="changePage($event)"
   ></pagination>
 </div>

@@ -1,39 +1,24 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'pagination',
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.css'],
 })
-export class PaginationComponent implements OnInit, OnDestroy {
+export class PaginationComponent implements OnChanges {
   @Input() currentPage: number = 1;
   @Input() total: number = 0;
   @Input() limit: number = 0;
   @Output() changePage = new EventEmitter<number>();
 
   pages: number[] = [];
-  private updateSubject = new Subject<void>();
-
-  ngOnInit(): void {
-    this.updateSubject
-      .subscribe(() => {
-      const pagesCount = Math.ceil(this.total / this.limit);
-      this.pages = this.range(1, pagesCount);
-    });
-
-    this.updateSubject.next();
-  }
 
   ngOnChanges(): void {
-    this.updateSubject.next();
+    this.rangePages();
   }
 
-  ngOnDestroy(): void {
-    this.updateSubject.unsubscribe();
-  }
-
-  range(start: number, end: number): number[] {
-    return [...Array(end).keys()].map((el) => el + start);
+  rangePages() {
+    const pagesCount = Math.ceil(this.total / this.limit);
+    this.pages = [...Array(pagesCount).keys()].map((el) => el + 1);
   }
 }

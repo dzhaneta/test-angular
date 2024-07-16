@@ -8,18 +8,22 @@ import { UsersRoutingModule } from "./users-routing.module";
 import { UsersPageComponent } from "./users-page.component";
 import { UserPageComponent } from "./user-page/user-page.component";
 
-import { UsersService } from "../services/users.service";
-import { UsersFilterService } from "../services/users-filter.service";
-import { UsersSortService } from "../services/users-sort.service";
-import { PaginationService } from "../services/pagination.service";
+import { UsersDataService } from "../services/users-data.service";
 
 import { ArraySortPipe } from "../shared/pipes/sort.pipe";
+import { SafePipe } from "../shared/pipes/safe.pipe";
+import { UsersApiService } from "../services/users-api/users-api.service";
+import { FilterPipe } from "../shared/pipes/filter/filter.pipe";
+import { PaginationPipe } from "../shared/pipes/pagination.pipe";
 
 @NgModule({
   declarations: [
     UsersPageComponent,
     UserPageComponent,
-    ArraySortPipe
+    ArraySortPipe,
+    FilterPipe,
+    PaginationPipe,
+    SafePipe
   ],
   imports: [
     CommonModule,
@@ -28,10 +32,8 @@ import { ArraySortPipe } from "../shared/pipes/sort.pipe";
     UsersRoutingModule
   ],
   providers: [
-    UsersService,
-    UsersFilterService,
-    UsersSortService,
-    PaginationService
+    UsersApiService,
+    UsersDataService,
   ],
 })
 export class UsersModule {}

@@ -1,28 +1,22 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { BehaviorSubject, Subject, debounceTime, distinct, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
-import { UsersService } from '../services/users.service';
-import { UsersFilterService } from '../services/users-filter.service';
-import { UsersSortService } from '../services/users-sort.service';
-import { PaginationService } from '../services/pagination.service';
+import { UsersDataService } from '../services/users-data.service';
 
-import { UserInterface } from 'src/types/user.interface';
-import { SortingInterface } from 'src/types/sorting.interface';
+import { UserInterface } from '../../types/user.interface';
+import { SortingInterface } from '../../types/sorting.interface';
 
 
 @Component({
   selector: 'app-users-page',
   templateUrl: './users-page.component.html',
   styleUrls: ['./users-page.component.css'],
-  providers: [PaginationService]
 })
 export class UsersPageComponent implements OnInit, OnDestroy {
 
   users: UserInterface[] = [];
-  usersProcessed: UserInterface[] = [];
-  usersRendered: UserInterface[] = [];
   columnsHeaders: string[] = ['avatar', 'name', 'username', 'email', 'address'];
 
   companies: string[] = ['Not selected'];
@@ -30,83 +24,52 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   companySelected: string = this.companies[0];
 
   sorting: SortingInterface = { column: 'name', order: 'asc' };
-  private sortingSubject = new BehaviorSubject<SortingInterface>(this.sorting);
-  sorting$ = this.sortingSubject.asObservable();
 
   perPageInput = new FormControl('');
   paginationCases: number[] = [3, 5, 10];
+  currentPagination = this.paginationCases[0];
   currentPage = 1;
-  currentPagintation = this.paginationCases[0];
 
   private destroy$ = new Subject<void>();
 
   constructor(
-    private usersService: UsersService,
-    private usersFilterService: UsersFilterService,
-    private usersSortService: UsersSortService,
-    private paginationService: PaginationService,
-    private cdr: ChangeDetectorRef
+    private usersDataService: UsersDataService,
+    public cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     // fetch users & companies lists
-    this.usersService.getUsers(this.sorting)
+    this.usersDataService.getUsers()
       .pipe(takeUntil(this.destroy$))
       .subscribe(users => {
         this.users = users;
-        this.usersProcessed = this.usersSortService.sortUsers(this.users, this.sorting);
         this.changePage(this.currentPage);
 
         const newCompaniesList: string[] = Array.from(new Set(users.map((user: UserInterface) => user.company)));
         this.companies = ['Not selected', ...newCompaniesList];
+        this.companyInput.setValue(this.companies[0]);
       });
 
-    // company filter subscription
     this.companyInput.valueChanges
-      .pipe(
-        distinct(),
-        debounceTime(1000),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((value) => {
-        if (value !== null) {
-          this.companySelected = value;
-          // filter
-          this.usersProcessed = this.usersFilterService.filterByCompany(this.users, this.companySelected);
-          this.cdr.detectChanges();
-          // reset page to 1 & render
-          this.changePage(1);
-        };
-
-    })
-
-    // sorting subscription
-    this.sorting$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(newSorting => {
-        this.sorting = newSorting;
-
-        this.usersProcessed = this.usersSortService.sortUsers(this.usersProcessed, this.sorting);
-        this.usersRendered = this.usersProcessed;
-
+      .subscribe(companyValue => {
+        if (companyValue !== null) {
+          this.companySelected = companyValue;
+        }
         this.changePage(1);
         this.cdr.detectChanges();
       });
 
-    // pagination change subscription
     this.perPageInput.valueChanges
-      .pipe(
-        distinct(),
-        debounceTime(1000),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((value) => {
-        if (value !== null) {
-          this.currentPagintation = parseInt(value);
-          this.currentPage = 1;
-          this.changePage(this.currentPage);
-        };
-      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(perPageValue => {
+        if (perPageValue !== null && !Number.isNaN(perPageValue)) {
+          this.currentPagination = Number(perPageValue);
+        }
+        this.changePage(1);
+        this.cdr.detectChanges();
+      });
+
   }
 
   ngOnDestroy(): void {
@@ -119,24 +82,21 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     return this.sorting.column === column && this.sorting.order === 'desc';
   }
 
-  isAscSorting(column: string): boolean {
-    return this.sorting.column === column && this.sorting.order === 'asc';
-  }
-
   changeSorting(column: string): void {
-    const futureSortingOrder = this.isDescSorting(column) ? 'asc' : 'desc';
-    this.sorting = {
+    const newSorting: SortingInterface = {
       column,
-      order: futureSortingOrder,
+      order: this.isDescSorting(column) ? 'asc' : 'desc',
     };
 
-    this.sortingSubject.next(this.sorting);
+    this.sorting = newSorting;
+    this.changePage(1);
   }
 
   changePage(page: number): void {
     this.currentPage = page;
+  }
 
-    this.usersRendered = this.paginationService
-      .paginateData(this.usersProcessed, this.currentPage, this.currentPagintation);
+  trackById(index: number, user: UserInterface): number {
+    return user.id;
   }
 }

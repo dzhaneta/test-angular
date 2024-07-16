@@ -1,1 +1,11 @@
+<nav class="nav">
+  <ul class="nav-container">
+    <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <a routerLink="/" class="nav-link">Main</a>
+    </li>
+    <li routerLinkActive="active" class="nav-item">
+      <a [routerLink]="'/users'" class="nav-link">Users</a>
+    </li>
+  </ul>
+</nav>
 <router-outlet></router-outlet>
